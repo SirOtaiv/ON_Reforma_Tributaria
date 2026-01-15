@@ -1,0 +1,5 @@
+customtkinter
+PyInstaller
+nuitka
+flet[all]
+pandas
