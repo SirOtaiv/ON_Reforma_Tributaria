@@ -11,21 +11,17 @@ def main(page: ft.Page):
    async def handle_product_import(e: ft.Event[ft.Button]):
       prod_file = await ft.FilePicker().pick_files(allow_multiple=False, file_type=ft.FilePickerFileType.CUSTOM, allowed_extensions=["csv"])
       if not prod_file:
-         print("Importação cancelada.")
+         print("Importação cancelada.") #TODO: Virar dialog
          return
 
       if not prod_file[0].path.lower().endswith('.csv'):
-         print("Arquivo inválido. Por favor, selecione um arquivo CSV.")
+         print("Arquivo inválido. Por favor, selecione um arquivo CSV.") #TODO: Virar dialog
          return   
 
-      print(prod_file[0].path)
       df = pd.read_csv(prod_file[0].path, sep=";")
       if import_csv_validator(df):
-         print("Arquivo CSV importado com sucesso!")
-         df
+         page.session.store.set("prod_df", df)
          await page.push_route("/data")
-         print(df.head())
-
    
    def handler_route_change():
       page.views.clear()
@@ -57,9 +53,7 @@ def main(page: ft.Page):
          )
       )
       if page.route == "/data":
-         page.views.append(
-            DataLoadView()
-         )
+         page.views.append(DataLoadView(page))
       page.update()
 
    async def view_pop(e):
