@@ -1,15 +1,12 @@
 import flet as ft
 import pandas as pd
 
-from src.routes.data_load import DataLoad
+from src.routes.data_load import DataLoadView
 from src.services.validator import import_csv_validator
 
 def main(page: ft.Page):
    page.title = "ON Reforma Tributária"
    page.padding = 30
-
-   #Instances Routes
-   view_data_load = DataLoad()
 
    async def handle_product_import(e: ft.Event[ft.Button]):
       prod_file = await ft.FilePicker().pick_files(allow_multiple=False, file_type=ft.FilePickerFileType.CUSTOM, allowed_extensions=["csv"])
@@ -60,7 +57,9 @@ def main(page: ft.Page):
          )
       )
       if page.route == "/data":
-         page.views.append(ft.View(view_data_load))
+         page.views.append(
+            DataLoadView()
+         )
       page.update()
 
    async def view_pop(e):
